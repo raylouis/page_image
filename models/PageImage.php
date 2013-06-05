@@ -17,8 +17,14 @@ if (!defined('IN_CMS')) { exit(); }
 use_helper('ActiveRecord');
 
 class PageImage extends ActiveRecord {
-    
     const TABLE_NAME = 'page_image';
+
+    static $belongs_to = array(
+        'attachment' => array(
+            'class_name' => 'Attachment',
+            'foreign_key' => 'attachment_id'
+        )
+    );
     
     public $id;
     
@@ -34,7 +40,8 @@ class PageImage extends ActiveRecord {
     public static function findByPageId($page_id) {
         return self::find(array(
             'where' => array('page_id = ?', $page_id),
-            'limit' => 1
+            'limit' => 1,
+            'include' => array('attachment')
         ));
     }
     
