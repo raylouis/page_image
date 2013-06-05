@@ -42,7 +42,7 @@ function page_image_delete_page(&$page) {
 }
 
 function page_image_tab_link(&$page) {
-    echo '<li class="tab"><a href="#page_image">' . __('Page Image') . '</a></li>';
+    echo '<li class="tab"><a href="#page_image">' . __('Image') . '</a></li>';
 }
 
 function page_image_tab(&$page) {
