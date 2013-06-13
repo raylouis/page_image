@@ -36,20 +36,24 @@ Observer::observe('view_page_edit_tabs', 'page_image_tab');
 Observer::observe('page_add_after_save', 'page_image_tab_save');
 Observer::observe('page_edit_after_save', 'page_image_tab_save');
 Observer::observe('page_delete', 'page_image_delete_page');
+Observer::observe('media_attachment_before_delete', 'page_image_delete_attachment');
 
-function page_image_delete_page(&$page) {
+
+function page_image_delete_page(&$page)
+{
     PageImage::deleteByPageId($page->id);
 }
 
-function page_image_tab_link(&$page) {
+function page_image_tab_link(&$page)
+{
     echo '<li class="tab"><a href="#page_image">' . __('Image') . '</a></li>';
 }
 
-function page_image_tab(&$page) {
+function page_image_tab(&$page)
+{
     if ($page_image = PageImage::findByPageId($page->id)) {
         $current = $page_image->attachment_id;
-    }
-    else {
+    } else {
         $current = false;
     }
 
@@ -59,17 +63,16 @@ function page_image_tab(&$page) {
     ));
 }
 
-function page_image_tab_save(&$page) {
+function page_image_tab_save(&$page)
+{
     if ($page_image = PageImage::findByPageId($page->id)) {
         if (isset($_POST['page_image']) && $_POST['page_image']['attachment_id'] != '' && $_POST['page_image']['attachment_id'] != 'NULL') {
             $page_image->attachment_id = $_POST['page_image']['attachment_id'];
             $page_image->save();
-        }
-        else {
+        } else {
             PageImage::deleteByPageId($page->id);
         }
-    }
-    else {
+    } else {
         if (isset($_POST['page_image']) && $_POST['page_image']['attachment_id'] != '' && $_POST['page_image']['attachment_id'] != 'NULL') {
             $page_image = new PageImage();
             $page_image->page_id = $page->id;
@@ -77,4 +80,9 @@ function page_image_tab_save(&$page) {
             $page_image->save();
         }
     }
+}
+
+function page_image_delete_attachment(&$attachment)
+{
+    PageImage::deleteByAttachmentId($attachment->id);
 }

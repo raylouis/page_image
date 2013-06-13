@@ -16,7 +16,8 @@ if (!defined('IN_CMS')) { exit(); }
 
 use_helper('ActiveRecord');
 
-class PageImage extends ActiveRecord {
+class PageImage extends ActiveRecord
+{
     const TABLE_NAME = 'page_image';
 
     static $belongs_to = array(
@@ -30,19 +31,42 @@ class PageImage extends ActiveRecord {
     
     public $page_id;
     public $attachment_id;
+
+    public static function deleteByAttachmentId($attachment_id)
+    {
+        if ($page_image = PageImage::findByAttachmentId($attachment_id)) {
+            $page_image->delete();
+        }
+    }
     
-    public static function deleteByPageId($page_id) {
+    public static function deleteByPageId($page_id)
+    {
         if ($page_image = PageImage::findByPageId($page_id)) {
             $page_image->delete();
         }
     }
 
-    public static function findByPageId($page_id) {
+    public static function findByAttachmentId($attachment_id)
+    {
+        return self::find(array(
+            'where' => array('attachment_id = ?', $attachment_id),
+            'limit' => 1,
+            'include' => array('attachment')
+        ));
+    }
+
+    public static function findByPageId($page_id)
+    {
         return self::find(array(
             'where' => array('page_id = ?', $page_id),
             'limit' => 1,
             'include' => array('attachment')
         ));
+    }
+
+    public static function findByParentPage($parent_id, $limit = null)
+    {
+        
     }
     
 }
